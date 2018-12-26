@@ -14,11 +14,11 @@ public protocol ZoomingAnimationControllerTransitioning {
 }
 
 public class ZoomingAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
-
+    
     var present = true
     public var sourceTransition: ZoomingAnimationControllerTransitioning?
     public var destinationTransition: ZoomingAnimationControllerTransitioning?
-
+    
     public init(present: Bool) {
         super.init()
         self.present = present
@@ -38,11 +38,11 @@ public class ZoomingAnimationController: NSObject, UIViewControllerAnimatedTrans
     }
     
     func animatePresenting(transitionContext: UIViewControllerContextTransitioning) {
-
+        
         let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
         let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
         let containerView = transitionContext.containerView
-
+        
         let snapShotImageView = UIImageView(image: fromViewController.view.toImage())
         containerView.addSubview(snapShotImageView)
         
@@ -56,27 +56,27 @@ public class ZoomingAnimationController: NSObject, UIViewControllerAnimatedTrans
         
         let sourceImageView = sourceTransition!.transitionSourceImageView()
         containerView.addSubview(sourceImageView)
-
+        
         UIView.animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0.0,
-            options: UIViewAnimationOptions.curveEaseOut,
+            options: UIView.AnimationOptions.curveEaseOut,
             animations: { () -> Void in
                 
                 containerView.alpha = 1.0
                 self.destinationTransition!.transitionDestinationImageView(sourceImageView: sourceImageView)
                 backgroundView.alpha = 1.0
-
+                
         }, completion: { _ -> Void in
-                
-                sourceImageView.alpha = 0.0
-                sourceImageView.removeFromSuperview()
-                
-                toViewController.view.alpha = 1.0
-                backgroundView.removeFromSuperview()
-                
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-
+            
+            sourceImageView.alpha = 0.0
+            sourceImageView.removeFromSuperview()
+            
+            toViewController.view.alpha = 1.0
+            backgroundView.removeFromSuperview()
+            
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            
         })
     }
     
@@ -91,11 +91,11 @@ public class ZoomingAnimationController: NSObject, UIViewControllerAnimatedTrans
         
         let sourceImageView = self.sourceTransition!.transitionSourceImageView()
         containerView.addSubview(sourceImageView)
-
+        
         UIView.animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0.0,
-            options: UIViewAnimationOptions.curveLinear,
+            options: UIView.AnimationOptions.curveLinear,
             animations: { () -> Void in
                 self.destinationTransition!.transitionDestinationImageView(sourceImageView: sourceImageView)
                 fromViewController.view.alpha = 0.1
@@ -103,7 +103,7 @@ public class ZoomingAnimationController: NSObject, UIViewControllerAnimatedTrans
             completion: { _ -> Void in
                 sourceImageView.alpha = 0.0
                 fromViewController.view.alpha = 0.0
-
+                
                 sourceImageView.removeFromSuperview()
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })
